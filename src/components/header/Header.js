@@ -8,7 +8,8 @@ import { signOut,onAuthStateChanged } from "firebase/auth";
 import {auth} from "../../firebase/config"
 import {toast} from "react-toastify"
 import {useDispatch} from "react-redux"
-import { SET_ACTIVE_USER } from '../../redux/slice/authSlice';
+import { REMOVE_ACTIVE_USER, SET_ACTIVE_USER } from '../../redux/slice/authSlice';
+import { ShowOnLogin,ShowOnLogout } from '../hiddenLink/hiddenLink';
 
 const Header = () => {
 
@@ -45,6 +46,7 @@ const Header = () => {
         }))
       } else {
         setDisplayName("")
+        dispatch(REMOVE_ACTIVE_USER())
       }
     });
   },[dispatch,displayName])
@@ -114,8 +116,11 @@ const Header = () => {
           </ul>
           <div className={styles["header-right"]} onClick={hideMenu}>
             <span className={styles.links}>
-              <NavLink className={activeLink} to="/login">Login</NavLink>
-              <a href="#home" style={{color:"#ff7722"}}>
+              <ShowOnLogout>
+                <NavLink className={activeLink} to="/login">Login</NavLink>
+              </ShowOnLogout>
+              <ShowOnLogin>
+                 <a href="#home" style={{color:"#ff7722"}}>
                 <FaUserCircle size={16}/>&nbsp;
                 Hi, {displayName}
               </a>
@@ -123,6 +128,8 @@ const Header = () => {
               <NavLink to="/" onClick={logoutUser}>
                 Logout
               </NavLink>
+              </ShowOnLogin>
+
             </span>
             {cart}
           </div>
