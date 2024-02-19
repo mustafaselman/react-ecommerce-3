@@ -8,7 +8,7 @@ import { FILTER_BY_BRAND, FILTER_BY_CATEGORY, FILTER_BY_PRICE } from '../../../r
 const ProductFilter = () => {
   const [category,setCategory] = useState("All")
   const [brand,setBrand] = useState("All")
-  const [price,setPrice] = useState(3000)
+  const [price,setPrice] = useState(0)
 
   const products = useSelector(selectProducts)
   const minPrice = useSelector(selectMinPrice)
@@ -25,6 +25,10 @@ const ProductFilter = () => {
   ]
 
   useEffect(()=>{
+    setPrice(maxPrice)
+  },[maxPrice])
+
+  useEffect(()=>{
     dispatch(FILTER_BY_BRAND({products,brand}))
   },[dispatch,products,brand])
 
@@ -35,6 +39,13 @@ const ProductFilter = () => {
   const filterProducts = (cat) => {
     setCategory(cat)
     dispatch(FILTER_BY_CATEGORY({products,category:cat}))
+  }
+
+  const clearFilters = () => {
+    setCategory("All")
+    setBrand("All")
+    setPrice(maxPrice)
+    dispatch(FILTER_BY_CATEGORY({products,category:"All"}))
   }
   return (
     <div className={styles.filter}>
@@ -61,7 +72,7 @@ const ProductFilter = () => {
           <input type='range' value={price} onChange={(e)=>setPrice(e.target.value)} name='price' min={minPrice} max={maxPrice}/>
         </div>
         <br/>
-        <button className='--btn --btn-danger'>Clear Filter</button>
+        <button className='--btn --btn-danger' onClick={clearFilters}>Clear Filter</button>
       </div>
     </div>
   )
